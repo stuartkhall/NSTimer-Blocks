@@ -13,7 +13,6 @@
 {
     void (^block)() = [inBlock copy];
     id ret = [self scheduledTimerWithTimeInterval:inTimeInterval target:self selector:@selector(jdExecuteSimpleBlock:) userInfo:block repeats:inRepeats];
-    [block release];
     return ret;
 }
 
@@ -21,7 +20,6 @@
 {
     void (^block)() = [inBlock copy];
     id ret = [self timerWithTimeInterval:inTimeInterval target:self selector:@selector(jdExecuteSimpleBlock:) userInfo:block repeats:inRepeats];
-    [block release];
     return ret;
 }
 
@@ -30,7 +28,8 @@
     if([inTimer userInfo])
     {
         void (^block)() = (void (^)(NSTimer *timer))[inTimer userInfo];
-        block(inTimer);
+        __weak NSTimer *weakTimer = inTimer;
+        block(weakTimer);
     }
 }
 
